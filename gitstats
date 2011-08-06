@@ -273,6 +273,8 @@ class GitDataCollector(DataCollector):
 		# Outputs "<stamp> <date> <time> <timezone> <author> '<' <mail> '>'"
 		lines = getpipeoutput(['git rev-list --pretty=format:"%%at %%ai %%aN <%%aE>" %s' % getcommitrange('HEAD'), 'grep -v ^commit']).split('\n')
 		for line in lines:
+			if not line:
+				continue
 			parts = line.split(' ', 4)
 			author = ''
 			try:
@@ -382,6 +384,8 @@ class GitDataCollector(DataCollector):
 		revlines = getpipeoutput(['git rev-list --pretty=format:"%%at %%T" %s' % getcommitrange('HEAD'), 'grep -v ^commit']).strip().split('\n')
 		lines = []
 		for revline in revlines:
+			if not revline:
+				continue
 			time, rev = revline.split(' ')
 			linecount = self.getFilesInCommit(rev)
 			lines.append('%d %d' % (int(time), linecount))
